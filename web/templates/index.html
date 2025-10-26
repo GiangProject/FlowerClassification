@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Phân loại Hoa (Python Web)</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+</head>
+
+<body>
+    <div class="container">
+
+        <h1>Ứng dụng Phân loại 102 Loài hoa</h1>
+        <p>Phân tích sử dụng: <strong>{{ chosen_model if chosen_model else 'ViT' }}</strong></p>
+        <p style="margin-top: -10px; font-size: 0.9em;"><a href="{{ url_for('stats_page') }}" class="stats-link">Xem
+                Thống kê Hiệu suất Thực tế →</a></p>
+
+
+        <form method="post" enctype="multipart/form-data">
+
+            <div class="model-selection">
+                <label for="model_select">Chọn Mô hình:</label>
+                <select name="model_choice" id="model_select">
+
+                    {% set vit_status = model_health['ViT'] %}
+                    <option value="ViT" {% if chosen_model=='ViT' %}selected{% endif %} {% if vit_status.status=='ERROR'
+                        %}disabled{% endif %}>
+                        Vision Transformer (ViT-B/16)
+                        {% if vit_status.status == 'ERROR' %}(Lỗi tải){% endif %}
+                    </option>
+
+                    {% set b1_status = model_health['B1'] %}
+                    <option value="B1" {% if chosen_model=='B1' %}selected{% endif %} {% if b1_status.status=='ERROR'
+                        %}disabled{% endif %}>
+                        EfficientNet-B1
+                        {% if b1_status.status == 'ERROR' %}(Lỗi tải){% endif %}
+                    </option>
+                </select>
+            </div>
+
+            <input type="text" name="image_url" placeholder="Dán URL ảnh vào đây" class="input-url">
+            <p style="margin: 5px 0; font-size: 0.9em; color: #6c757d;">HOẶC</p>
+
+            <input type="file" name="file">
+            <br>
+            <button type="submit">Phân loại & Giải thích (XAI)</button>
+        </form>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <p class="error-message {{ category }}">{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+
+        {% if filename and predictions %}
+
+        <div class="image-section">
+            <div class="image-box">
+                <p>Ảnh gốc</p>
+                <img src="{{ url_for('static', filename='uploads/' + filename) }}" alt="Ảnh gốc" class="uploaded-image">
+            </div>
+        </div>
+
+        <div class="result">
+            <h2>Kết quả dự đoán:</h2>
+
+            <div class="chart-section">
+                <canvas id="predictionChart"></canvas>
+            </div>
+
+            <div class="main-prediction">
+                <p class="main">{{ predictions[0].label }} ({{ predictions[0].probability }})</p>
+                <p>Màu chủ đạo khai phá được: <strong>{{ predictions[0].color }}</strong></p>
+
+                <p class="wiki-summary">
+                    **Thông tin Wikipedia:** <em>{{ predictions[0].summary }}</em>
+                </p>
+                <hr>
+            </div>
+
+            <div class="feedback-section">
+                <h3>Phản hồi Hiệu suất:</h3>
+                <p>Dự đoán này có chính xác với ảnh bạn vừa tải lên không?</p>
+
+                <button type="button" class="btn-feedback btn-success" onclick="submitFeedback(true)">✅ Dự đoán
+                    Đúng</button>
+                <button type="button" class="btn-feedback btn-danger" onclick="submitFeedback(false)">❌ Dự đoán
+                    Sai</button>
+            </div>
+        </div>
+
+        <script>
+            // Đăng ký Plugin Data Labels
+            Chart.register(ChartDataLabels);
+
+            const predictions = {{ predictions | tojson }};
+            const labels = predictions.map(p => p.label);
+            const dataValues = predictions.map(p => parseFloat(p.probability.replace('%', '')));
+
+            const ctx = document.getElementById('predictionChart').getContext('2d');
+
+            const predictionChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Xác suất (%)',
+                        data: dataValues,
+                        backgroundColor: [
+                            'rgba(42, 157, 143, 0.8)',
+                            'rgba(255, 159, 64, 0.7)',
+                            'rgba(255, 205, 86, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(42, 157, 143, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 205, 86, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: { display: true, text: 'Xác suất dự đoán (%)' }
+                        },
+                        x: {
+                            ticks: { font: { size: 10 } }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: 'Top Dự đoán của Mô hình',
+                            font: { size: 16 }
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            formatter: function (value, context) {
+                                return value.toFixed(1) + '%';
+                            },
+                            font: { weight: 'bold', size: 12 }
+                        }
+                    }
+                }
+            });
+        </script>
+
+        <script>
+            const CURRENT_MODEL = "{{ chosen_model if chosen_model else 'ViT' }}";
+            const CURRENT_PREDICTION = "{{ predictions[0].label }}";
+            const CURRENT_FILE = "{{ filename }}";
+
+            function submitFeedback(isCorrect) {
+                // Tạo form ẩn và gửi POST request đến Flask
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ url_for("submit_feedback") }}';
+
+                function addInput(name, value) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = name;
+                    input.value = value;
+                    form.appendChild(input);
+                }
+
+                addInput('model_choice', CURRENT_MODEL);
+                addInput('filename', CURRENT_FILE);
+                addInput('predicted_label', CURRENT_PREDICTION);
+                addInput('correctness', isCorrect ? 'True' : 'False');
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        </script>
+        {% endif %}
+    </div>
+</body>
+
+</html>

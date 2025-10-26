@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Thống kê Hiệu suất Thực tế</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.0/dist/chartjs-adapter-moment.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <a href="{{ url_for('index') }}" class="back-link">← Quay lại trang Phân loại</a>
+        <h1>📈 Thống kê Hiệu suất Thực tế</h1>
+        <p class="subtitle">Phân tích dữ liệu phản hồi thu thập từ người dùng.</p>
+
+        {% if stats and stats.summary %}
+
+        <div class="chart-section stats-chart-container">
+            <canvas id="accuracyChart"></canvas>
+        </div>
+
+        <hr class="stats-divider">
+
+        {% if stats.timeseries %}
+        <h2>Phân tích MLOps: Độ chính xác Theo Thời gian</h2>
+        <div class="chart-section stats-chart-container">
+            <canvas id="timeSeriesChart"></canvas>
+        </div>
+        {% endif %}
+
+        <hr class="stats-divider">
+
+        <h2>Dữ liệu Chi tiết Phản hồi</h2>
+        <table class="stats-table">
+            <thead>
+                <tr>
+                    <th>Mô hình</th>
+                    <th>Tổng Phản hồi</th>
+                    <th>Số Đúng</th>
+                    <th>Độ chính xác (%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stat in stats.summary %}
+                <tr>
+                    <td><strong>{{ stat.model_choice }}</strong></td>
+                    <td>{{ stat.total_feedback }}</td>
+                    <td>{{ stat.sum }}</td>
+                    <td class="accuracy-score">{{ '%.2f' | format(stat.accuracy) }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <script>
+            Chart.register(ChartDataLabels);
+
+            const summaryData = {{ stats.summary | tojson }};
+            const modelNames = summaryData.map(s => s.model_choice);
+            const accuracyValues = summaryData.map(s => parseFloat(s.accuracy.toFixed(2)));
+
+            const ctxBar = document.getElementById('accuracyChart').getContext('2d');
+
+            const accuracyChart = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: modelNames,
+                    datasets: [{
+                        label: 'Độ chính xác (%)',
+                        data: accuracyValues,
+                        backgroundColor: ['rgba(0, 123, 255, 0.7)', 'rgba(40, 167, 69, 0.7)'],
+                        borderColor: ['rgba(0, 123, 255, 1)', 'rgba(40, 167, 69, 1)'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    layout: { padding: { top: 30 } }, // Thêm padding để nhãn không bị cắt
+                    scales: {
+                        y: { beginAtZero: true, max: 100, title: { display: true, text: 'Tỷ lệ Chính xác (%)' } },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: true, text: 'So sánh Hiệu suất ViT vs. EfficientNet-B1', font: { size: 16, weight: 'bold' } },
+                        datalabels: {
+                            anchor: 'end', align: 'end', offset: -5,
+                            formatter: (value) => `${value}%`,
+                            font: { weight: 'bold', size: 14, color: 'white' }
+                        }
+                    }
+                }
+            });
+        </script>
+
+        {% if stats.timeseries %}
+        <script>
+            const tsData = {{ stats.timeseries | tojson }};
+
+            const vitData = tsData.filter(d => d.model_choice === 'ViT').map(d => ({ x: d.date, y: d.accuracy }));
+            const b1Data = tsData.filter(d => d.model_choice === 'B1').map(d => ({ x: d.date, y: d.accuracy }));
+
+            const tsCtx = document.getElementById('timeSeriesChart').getContext('2d');
+
+            const timeSeriesChart = new Chart(tsCtx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'ViT-B/16 Accuracy',
+                        data: vitData,
+                        borderColor: 'rgba(0, 123, 255, 1)',
+                        backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                        tension: 0.3
+                    }, {
+                        label: 'EfficientNet-B1 Accuracy',
+                        data: b1Data,
+                        borderColor: 'rgba(40, 167, 69, 1)',
+                        backgroundColor: 'rgba(40, 167, 69, 0.2)',
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: { unit: 'day', tooltipFormat: 'MMM dd', displayFormats: { day: 'MMM dd' } },
+                            title: { display: true, text: 'Ngày' }
+                        },
+                        y: { min: 0, max: 100, title: { display: true, text: 'Độ chính xác (%)' } }
+                    },
+                    plugins: {
+                        legend: { position: 'top' },
+                        title: { display: true, text: 'Phân tích MLOps (Độ chính xác Theo Thời gian)', font: { size: 16 } }
+                    }
+                }
+            });
+        </script>
+        {% endif %}
+
+
+        {% else %}
+        <p class="warning-message">Chưa có đủ phản hồi để tạo thống kê. Vui lòng sử dụng tính năng Feedback trên trang
+            chủ.</p>
+        {% endif %}
+    </div>
+</body>
+
+</html>

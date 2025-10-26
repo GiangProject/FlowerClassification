@@ -1,0 +1,13 @@
+Flask
+torch
+torchvision
+Pillow
+numpy
+pandas
+scipy
+scikit-learn
+matplotlib
+seaborn
+tqdm
+torchsummary
+opencv-python-headless 

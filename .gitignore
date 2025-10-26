@@ -1,0 +1,18 @@
+# Môi trường ảo Python và Cache
+venv/
+__pycache__/
+*.pyc
+
+# Tài nguyên lớn và File tạm thời
+*.zip
+*.tar
+*.tgz
+*.mat
+
+# File lớn (Model Weights - KHÔNG được upload trực tiếp)
+web/models/*.pth
+
+# Dữ liệu tạm thời và Uploads
+web/static/uploads/
+data/feedback.csv
+web/models/wiki_cache.json

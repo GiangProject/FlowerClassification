@@ -1,0 +1,299 @@
+/* web/static/style.css (PHIÊN BẢN TỐI ƯU GIAO DIỆN) */
+
+/* --- CÀI ĐẶT CHUNG --- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f4f8;
+    /* Nền xám xanh nhạt */
+    color: #333;
+    margin: 0;
+    padding: 50px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 800px;
+    /* Tăng chiều rộng để biểu đồ đẹp hơn */
+    width: 100%;
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+h1 {
+    color: #007bff;
+    /* Màu xanh dương hiện đại */
+    font-size: 2.2em;
+    margin-bottom: 10px;
+}
+
+/* --- KHU VỰC FORM & INPUT --- */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    /* Khoảng cách giữa các phần tử */
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #e0e7ee;
+    border-radius: 12px;
+}
+
+.model-selection {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+select {
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.input-url {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #007bff;
+    /* Màu xanh chính */
+    border-radius: 8px;
+    text-align: center;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+
+input[type="file"] {
+    width: 100%;
+    max-width: 350px;
+    margin-bottom: 0;
+    padding: 10px 0;
+    border: none;
+    background-color: transparent;
+}
+
+button[type="submit"] {
+    width: 100%;
+    max-width: 400px;
+    background-color: #4CAF50;
+    /* Màu xanh lá nổi bật cho hành động chính */
+    color: white;
+    padding: 14px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+button[type="submit"]:hover {
+    background-color: #388e3c;
+}
+
+/* --- KHU VỰC HÌNH ẢNH --- */
+.image-section {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 40px 0 20px 0;
+    flex-wrap: wrap;
+    clear: both;
+}
+
+.image-box {
+    max-width: 350px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.image-box p {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 0;
+    margin: 0;
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+.uploaded-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* --- KHU VỰC KẾT QUẢ (RESULT) --- */
+.result {
+    text-align: left;
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid #e0e7ee;
+    border-radius: 12px;
+}
+
+.chart-section {
+    margin-bottom: 30px;
+    height: 350px;
+    /* Tăng chiều cao biểu đồ */
+}
+
+.main-prediction {
+    padding: 20px;
+    background-color: #e6f7ff;
+    /* Nền xanh nhạt cho Top 1 */
+    border-radius: 10px;
+    border-left: 5px solid #007bff;
+    margin-bottom: 20px;
+}
+
+.result .main {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #1a5a9e;
+    /* Màu xanh đậm cho kết quả chính */
+}
+
+.wiki-summary {
+    font-size: 0.9em;
+    color: #5a6268;
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+}
+
+/* --- FEEDBACK BUTTONS --- */
+.feedback-section {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px dashed #ddd;
+    margin-top: 30px;
+}
+
+.btn-feedback {
+    padding: 10px 20px;
+    margin: 5px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* --- MESSAGES & LINKS --- */
+.flash-messages {
+    margin-top: 20px;
+}
+
+.error-message {
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: bold;
+    color: white !important;
+}
+
+.error-message.error {
+    background-color: #dc3545;
+}
+
+.error-message.success {
+    background-color: #28a745;
+}
+
+.stats-link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.subtitle {
+    color: #6c757d;
+    font-size: 1.1em;
+}
+
+.stats-chart-container {
+    width: 100%;
+    /* Đặt chiều cao cố định cho biểu đồ để hiển thị đẹp hơn */
+    height: 400px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #fcfcfc;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.stats-divider {
+    border: 0;
+    border-top: 1px dashed #ddd;
+    margin: 30px 0;
+}
+
+/* web/static/style.css (Bổ sung/Sửa đổi cho bảng thống kê) */
+
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    table-layout: fixed;
+    /* 🎯 Cố định layout bảng để chia cột đều hơn */
+}
+
+.stats-table th,
+.stats-table td {
+    padding: 12px 8px;
+    /* 🎯 Tăng padding ngang và dọc */
+    border: 1px solid #dee2e6;
+    text-align: center;
+    word-wrap: break-word;
+    /* Cho phép từ quá dài tự động xuống dòng */
+}
+
+.stats-table th {
+    background-color: #e9ecef;
+    /* Màu nền nhẹ hơn */
+    color: #2c3e50;
+    font-weight: 700;
+    font-size: 0.9em;
+    /* ⚠️ XÓA: white-space: nowrap; - Thay bằng table-layout: fixed; */
+}
+
+.stats-table td strong {
+    font-size: 1.1em;
+    color: #34495e;
+}
+
+.accuracy-score {
+    font-weight: bold;
+    color: #28a745;
+    font-size: 1.1em;
+    background-color: #f6fff6;
+    /* Nền nhẹ cho cột chính xác */
+}
+
+.stats-table tbody tr:hover {
+    background-color: #e9f0f7;
+    /* Thêm hover effect */
+}

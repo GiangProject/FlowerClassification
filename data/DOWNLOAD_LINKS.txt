@@ -1,0 +1,18 @@
+# DOWNLOAD_LINKS.txt
+# Các đường link tải dữ liệu gốc (Oxford 102 Category Flower Dataset)
+
+# --- LƯU Ý KHI CHẠY ---
+# - File 102flowers.tgz (328.9 MB) cần được tải và giải nén (tar -xzf) thành thư mục "jpg/"
+#   trước khi chạy bất kỳ DataLoader nào trong src/preprocessing.py.
+
+# 1. FILE NÉN ẢNH GỐC (328.9 MB)
+102flowers.tgz: https://www.robots.ox.ac.uk/~vgg/data/flowers/102/102flowers.tgz
+
+# 2. METADATA: NHÃN LỚP GỐC
+imagelabels.mat: https://www.robots.ox.ac.uk/~vgg/data/flowers/102/imagelabels.mat
+
+# 3. METADATA: PHÂN CHIA TẬP DỮ LIỆU (TRAIN/VALID/TEST)
+setid.mat: https://www.robots.ox.ac.uk/~vgg/data/flowers/102/setid.mat
+
+# 4. METADATA: ÁNH XẠ ID LỚP SANG TÊN HOA
+cat_to_name.json: https://raw.githubusercontent.com/udacity/pytorch_challenge/master/cat_to_name.json
