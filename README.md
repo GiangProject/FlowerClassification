@@ -14,45 +14,47 @@ Dự án triển khai một ứng dụng web Flask hiện đại để phân lo�
 ---
 
 ## 1. 🛠️ Cấu trúc Dự án và Cài đặt
-### 1.1. Cấu trúc Thư mục
+### 1.1. Cấu trúc Thư mục Dự án
+
+```tree
 flower_app_flask/
 ├── data/
-│   ├── DOWNLOAD_LINKS.txt       # Chứa các URL để tải dữ liệu gốc
-│   ├── feedback.csv             # Dữ liệu phản hồi thực tế (Feedback Loop)
-│   ├── imagelabels.mat          # Metadata gốc (Nhãn ảnh)
-│   ├── setid.mat                # Metadata gốc (Phân chia tập)
-│   ├── cat_to_name.json         # Ánh xạ nhãn -> tên hoa
-│   ├── flower_color_map_optimized.json # Kết quả EDA (Bản đồ màu)
-│   └── jpg/                     # Thư mục chứa ảnh gốc đã giải nén (tùy chọn)
+│   ├── DOWNLOAD_LINKS.txt       # Chứa các URL để tải dữ liệu gốc
+│   ├── feedback.csv             # Dữ liệu phản hồi thực tế (Feedback Loop)
+│   ├── imagelabels.mat          # Metadata gốc (Nhãn ảnh)
+│   ├── setid.mat                # Metadata gốc (Phân chia tập)
+│   ├── cat_to_name.json         # Ánh xạ nhãn -> tên hoa
+│   ├── flower_color_map_optimized.json # Kết quả EDA (Bản đồ màu)
+│   └── jpg/                     # Thư mục chứa ảnh gốc đã giải nén (tùy chọn)
 │
 ├── src/
-│   ├── __init__.py              # (Cần thiết cho Python module)
-│   ├── app.py                   # Ứng dụng Flask (Routing, Upload, Session)
-│   ├── model_service.py         # Dịch vụ AI (Tải đa mô hình, Dự đoán tốc độ cao)
-│   ├── feedback_service.py      # Logic ghi và phân tích Feedback Loop
-│   ├── _config.py               # Cấu hình hằng số (nếu có)
-│   ├── preprocessing.py         # Xử lý dữ liệu và tạo DataLoader
-│   ├── model_training.py        # Logic Huấn luyện mô hình
-│   └── evaluation.py            # Logic Đánh giá và phân tích (t-SNE, etc.)
+│   ├── __init__.py              # (Cần thiết cho Python module)
+│   ├── app.py                   # Ứng dụng Flask (Routing, Upload, Session)
+│   ├── model_service.py         # Dịch vụ AI (Tải đa mô hình, Dự đoán tốc độ cao)
+│   ├── feedback_service.py      # Logic ghi và phân tích Feedback Loop
+│   ├── _config.py               # Cấu hình hằng số (nếu có)
+│   ├── preprocessing.py         # Xử lý dữ liệu và tạo DataLoader
+│   ├── model_training.py        # Logic Huấn luyện mô hình
+│   └── evaluation.py            # Logic Đánh giá và phân tích (t-SNE, etc.)
 │
 ├── web/
-│   ├── models/                  # Mô hình đã huấn luyện
-│   │   ├── exp_vit.pth          # ViT-B/16 Weights
-│   │   ├── exp4_b1_continued.pth# EfficientNet-B1 Weights
-│   │   └── wiki_cache.json      # Cache mô tả Wikipedia
-│   │
-│   ├── templates/               # Các file HTML
-│   │   ├── index.html           # Trang phân loại chính
+│   ├── models/                  # Mô hình đã huấn luyện
+│   │   ├── exp_vit.pth          # ViT-B/16 Weights
+│   │   ├── exp4_b1_continued.pth# EfficientNet-B1 Weights
+│   │   └── wiki_cache.json      # Cache mô tả Wikipedia
+│   │
+│   ├── templates/               # Các file HTML
+│   │   ├── index.html           # Trang phân loại chính
 │   │   └── stats.html           # Trang thống kê MLOps
 │   │
-│   └── static/                  # Tài nguyên tĩnh
+│   └── static/                  # Tài nguyên tĩnh
 │       ├── uploads/             # Ảnh upload tạm thời
 │       └── style.css            # Style giao diện
 │
-├── venv/                        # Môi trường ảo (Không cần nộp)
-├── README.md                    # Tài liệu hướng dẫn (bạn đang đọc)
-├── report.pdf                   # Báo cáo dự án (BẮT BUỘC NỘP)
-└── requirements.txt             # Danh sách thư viện Python
+├── venv/                        # Môi trường ảo (KHÔNG commit)
+├── README.md                    
+├── report.pdf                   
+└── requirements.txt
 ### 1.2. Hướng dẫn Cài đặt Môi trường
 
 1.  **Cài đặt Thư viện Bắt buộc:**
