@@ -16,6 +16,7 @@ Dự án triển khai một ứng dụng web Flask hiện đại để phân lo�
 ## 1. 🛠️ Cấu trúc Dự án và Cài đặt
 ### 1.1. Cấu trúc Thư mục Dự án
 
+
 ```
 ├── 📁 data
 │   └── 📄 DOWNLOAD_LINKS.txt
@@ -43,6 +44,7 @@ Dự án triển khai một ứng dụng web Flask hiện đại để phân lo�
 │       └── 🌐 stats.html
 ├── ⚙️ .gitignore
 ├── 📝 README.md
+├── 📕 report.pdf
 └── 📄 requirements.txt
 ```
 ### 1.2. Hướng dẫn Cài đặt Môi trường
